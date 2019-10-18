@@ -1,5 +1,6 @@
 package Main;
 
+import Operator.Operator;
 import Visualize.MyPanel;
 
 import java.util.Scanner;
@@ -10,19 +11,19 @@ public class Calculate {
         MyPanel myPanel = new MyPanel();
     }
 
-    public static int calculate(int firstNum,int secondNum,String operator){
+    public static int calculate(int firstNum, int secondNum, Operator operator){
         int ans = 0;
         switch(operator){
-            case "+":
+            case ADD:
                 ans = firstNum + secondNum;
                 break;
-            case "-":
+            case SUBTRACT:
                 ans = firstNum - secondNum;
                 break;
-            case "*":
+            case MULTIPLY:
                 ans = firstNum * secondNum;
                 break;
-            case "/":
+            case DIVIDE:
                 ans = firstNum / secondNum;
                 break;
             default:

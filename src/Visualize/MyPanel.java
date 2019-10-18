@@ -3,7 +3,11 @@ package Visualize;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
+import Generate.Generate;
 import Main.Calculate;
+import Operator.Operator;
+
 import javax.swing.*;
 
 public class MyPanel extends JFrame{
@@ -30,8 +34,8 @@ public class MyPanel extends JFrame{
         imageLabel = new JLabel();
         ansLabel = new JLabel("");
 
-        jb1 = new JButton("计算");
-        jb2 = new JButton("取消");
+        jb1 = new JButton("判断");
+        jb2 = new JButton("出题");
 
         jtf1 = new JTextField(10);
         jtf2 = new JTextField(10);
@@ -64,20 +68,68 @@ public class MyPanel extends JFrame{
 
         imagePanel.add(imageLabel,BorderLayout.CENTER);
 
+        JFrame This = this;
+
+        jb2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Operator operator = Generate.generateOperator();
+                int num1 = Generate.generateNumber();
+                int num2 = Generate.generateNumber();
+                if (operator.equals(Operator.SUBTRACT)) {
+                    while (num1 - num2 < 0) {
+                        num1 = Generate.generateNumber();
+                        num2 = Generate.generateNumber();
+                    }
+                }
+                jtf1.setText(String.valueOf(num1));
+                jtf2.setText(operator.toString());
+                jtf3.setText(String.valueOf(num2));
+                jtf1.setEditable(false);
+                jtf2.setEditable(false);
+                jtf3.setEditable(false);
+            }
+        });
+
         jb1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int num1 = Integer.valueOf(jtf1.getText());
-                String op = jtf2.getText();
-                int num2 = Integer.valueOf(jtf3.getText());
+                String s1 = jtf1.getText();
+                String opString = jtf2.getText();
+                String s2 = jtf3.getText();
+                String yourAnsString = jtf4.getText();
+                // 处理空输入
+                if (s1.equals("") || opString.equals("") || s2.equals("")) {
+                    JOptionPane.showMessageDialog(This, "请输入数1、数2及运算符", "警告", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (yourAnsString.equals("")) {
+                    JOptionPane.showMessageDialog(This, "请输入结果", "警告", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                int num1 = 0, num2 = 0, yourAns = 0;
+                Operator op = null;
+                try {
+                    num1 = Integer.valueOf(s1);
+                    op = Operator.getOp(opString);
+                    num2 = Integer.valueOf(s2);
+                    yourAns = Integer.valueOf(yourAnsString);
+                } catch (Exception e1){
+                    e1.printStackTrace();
+                    JOptionPane.showMessageDialog(This, "非法输入", "警告", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                // 计算
                 int ans = Calculate.calculate(num1, num2, op);
-                int yourAns = Integer.valueOf(jtf4.getText());
                 String ansText="";
                 if(ans == yourAns){
-                    ansText = "正确结果为："+ ans +"计算正确!";
+                    ansText = "正确结果为："+ ans +" 计算正确!";
                 }else{
-                    ansText = "正确结果为："+ ans + "   " + "计算错误!";
+                    ansText = "正确结果为："+ ans + "   " + " 计算错误!";
                 }
                 ansLabel.setText(ansText);
+                jtf1.setEditable(true);
+                jtf2.setEditable(true);
+                jtf3.setEditable(true);
             }
         });
 
@@ -86,7 +138,7 @@ public class MyPanel extends JFrame{
         this.add(jp2);
         this.add(jp3);
         this.add(jp4);
-        this.add(imagePanel);
+        //this.add(imagePanel);
 
         this.setSize(800, 800);
         this.setTitle("计算器");
