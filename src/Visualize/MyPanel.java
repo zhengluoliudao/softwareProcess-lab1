@@ -86,7 +86,7 @@ public class MyPanel extends JFrame{
         this.add(jp2);
         this.add(jp3);
         this.add(jp4);
-        //this.add(imagePanel);
+        this.add(imagePanel);
 
         this.setSize(800, 800);
         this.setTitle("计算器");
